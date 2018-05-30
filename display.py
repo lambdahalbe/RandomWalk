@@ -34,6 +34,7 @@ class screen:
 
     def simulate(self, walkers):
         while self.running:
+            #sleep(.3)
             for walker in walkers:
                 for foo in range(self.update_steps):
                     walker.propagate()

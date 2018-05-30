@@ -49,3 +49,25 @@ class triangular_walker(walker):
 
         self.pos += step
         self.path.append(np.copy(self.pos))
+    
+    def init_line(self, cv):
+        #TODO correct draw_algorithm
+        draw_list = []
+        for pos in self.path:
+            if pos[0] % 2 == 0:
+                draw_list.append(pos[0] + .5)
+            else:
+                draw_list.append(pos[0])
+            draw_list.append(pos[1])
+        self.id = cv.create_line(*draw_list)
+
+    def update_line(self, cv):
+        #TODO no hard-coded scaling factor!
+        draw_list = []
+        for pos in self.path:
+            if pos[1] % 2 == 0:
+                draw_list.append(25 * (pos[0] + .5))
+            else:
+                draw_list.append(25 * pos[0])
+            draw_list.append(25 * pos[1])
+        cv.coords(self.id, *draw_list)

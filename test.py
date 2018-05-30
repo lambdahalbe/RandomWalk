@@ -8,3 +8,4 @@ for i in range(10):
     new_walker.walk()
 print(new_walker.path)
 new_screen = screen(1000, 1000, [new_walker], update_steps = 1)
+bla

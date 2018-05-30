@@ -11,7 +11,7 @@ class screen:
         self.update_steps = update_steps
         self.root = tk.Tk()
         self.cv = tk.Canvas(self.root, width=width, height=height)
-        self.cv.create_rectangle(0, 0, width, height, fill="midnight blue")
+        self.cv.create_rectangle(0, 0, width, height, fill="pink")
         self.cv.pack()
 
         self.root.bind('<Escape>', self.__close)

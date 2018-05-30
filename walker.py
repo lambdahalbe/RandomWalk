@@ -17,6 +17,7 @@ class walker:
         step = random.choice((-1, 1))
         self.pos[direction] += step
         self.path.append(np.copy(self.pos))
+        self.steps += 1
 
     def propagate(self):
         self.walk()
@@ -49,16 +50,17 @@ class triangular_walker(walker):
 
         self.pos += step
         self.path.append(np.copy(self.pos))
+        self.steps += 1
     
-    def init_line(self, cv):
-        #TODO correct draw_algorithm
+    def init_line(self, cv, scale=25):
+        #TODO see update line
         draw_list = []
         for pos in self.path:
-            if pos[0] % 2 == 0:
-                draw_list.append(pos[0] + .5)
+            if pos[1] % 2 == 0:
+                draw_list.append(scale * (pos[0] + .5))
             else:
-                draw_list.append(pos[0])
-            draw_list.append(pos[1])
+                draw_list.append(25 * pos[0])
+            draw_list.append(25 * pos[1])
         self.id = cv.create_line(*draw_list)
 
     def update_line(self, cv):

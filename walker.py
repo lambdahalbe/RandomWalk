@@ -36,6 +36,14 @@ class walker:
             draw_list.append(pos[1])
         cv.coords(self.id, *draw_list)
 
+    def check_possible(self, possible_steps):
+        allowed = []
+        for step in possible_steps:
+            position = self.pos + step
+            if not grid[position[0]][position[1]]:
+                allowed.append(step)
+        return allowed
+
 
 class hexagonal_walker(walker):
     even_steps = [np.array((1, 0)), np.array((-1, 0)), np.array((0, 1)), np.array((0, -1)), np.array((1, 1)), np.array((1, -1))]

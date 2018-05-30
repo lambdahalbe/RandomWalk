@@ -14,8 +14,8 @@ class walker:
 
     def walk(self):
         direction = np.random.randint(0, self.dim)
-        stepsize = random.choice((-1, 1))
-        self.pos[direction] += stepsize
+        step = random.choice((-1, 1))
+        self.pos[direction] += step
         self.path.append(np.copy(self.pos))
 
     def propagate(self):
@@ -34,3 +34,18 @@ class walker:
             draw_list.append(pos[0])
             draw_list.append(pos[1])
         cv.coords(self.id, *draw_list)
+
+
+class triangular_walker(walker):
+    even_steps = [np.array((1, 0)), np.array((-1, 0)), np.array((0, 1)), np.array((0, -1)), np.array((1, 1)), np.array((1, -1))]
+    odd_steps = [np.array((1, 0)), np.array((-1, 0)), np.array((0, 1)), np.array((0, -1)), np.array((-1, 1)), np.array((-1, -1))]
+    
+    
+    def walk(self):
+        if self.pos[1] % 2 == 0:
+            step = random.choice(self.even_steps)
+        else:
+            step = random.choice(self.odd_steps)
+
+        self.pos += step
+        self.path.append(np.copy(self.pos))

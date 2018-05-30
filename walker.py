@@ -37,7 +37,7 @@ class walker:
         cv.coords(self.id, *draw_list)
 
 
-class triangular_walker(walker):
+class hexagonal_walker(walker):
     even_steps = [np.array((1, 0)), np.array((-1, 0)), np.array((0, 1)), np.array((0, -1)), np.array((1, 1)), np.array((1, -1))]
     odd_steps = [np.array((1, 0)), np.array((-1, 0)), np.array((0, 1)), np.array((0, -1)), np.array((-1, 1)), np.array((-1, -1))]
     

@@ -1,9 +1,9 @@
-from walker import triangular_walker
+from walker import hexagonal_walker
 from display import screen
 import numpy as np
 
 
-new_walker = triangular_walker(np.array([20, 20]))
+new_walker = hexagonal_walker(np.array([20, 20]))
 for i in range(10):
     new_walker.walk()
 print(new_walker.path)

@@ -1,9 +1,11 @@
 import tkinter as tk
+from random import choice
 from sys import modules
 from time import time, sleep
 
 
 class screen:
+    colors = ["red", "green", "blue", "cyan", "magenta"]
 
 
     def __init__(self, width, height, walkers, scale=25, update_steps=1, sleep_time=0):
@@ -22,7 +24,7 @@ class screen:
         self.running = True
 
         for walker in self.walkers:
-            walker.init_line(self.cv, self.scale)
+            walker.init_line(self.cv, self.scale, choice(self.colors))
 
         self.root.after(200, self.simulate, self.walkers)
         if "idlelib" not in modules:

@@ -31,16 +31,19 @@ class walker:
         if self.self_avoiding:
             self.position_dic[tuple(self.pos)] = 1
 
+
     def propagate(self):
         self.walk()
 
-    def init_line(self, cv, scale=25):
+
+    def init_line(self, cv, scale=25, color="black"):
         draw_list = []
         while len(draw_list) < 4:
             for pos in self.path:
                 draw_list.append(scale * pos[0])
                 draw_list.append(scale * pos[1])
-        self.id = cv.create_line(*draw_list)
+        self.id = cv.create_line(*draw_list, fill=color)
+
 
     def update_line(self, cv, scale=25):
         draw_list = []
@@ -48,6 +51,7 @@ class walker:
             draw_list.append(scale * pos[0])
             draw_list.append(scale * pos[1])
         cv.coords(self.id, *draw_list)
+
 
     def check_possible(self, possible_steps):
         allowed = []
@@ -61,7 +65,7 @@ class walker:
 class hexagonal_walker(walker):
     even_steps = [np.array((1, 0)), np.array((-1, 0)), np.array((0, 1)), np.array((0, -1)), np.array((1, 1)), np.array((1, -1))]
     odd_steps = [np.array((1, 0)), np.array((-1, 0)), np.array((0, 1)), np.array((0, -1)), np.array((-1, 1)), np.array((-1, -1))]
-    vertical_stretch = np.cos(30*(np.pi/180))  # performe calculation only once to increase efficency
+    vertical_stretch = 3**.5 / 2  # = np.cos(30*(np.pi/180))  # performe calculation only once to increase efficency
     
     
     def walk(self):
@@ -81,26 +85,33 @@ class hexagonal_walker(walker):
         if self.self_avoiding:
             self.position_dic[tuple(self.pos)] = 1
         self.steps += 1
-    
-    def init_line(self, cv, scale=25):
+
+
+    def position_coordinates(self, position):
+        if position[1] % 2 == 0:
+            x = position[0] + .5
+        else:
+            x = position[0]
+        y = position[1] * self.vertical_stretch
+        return np.array((x, y))
+ 
+
+    def init_line(self, cv, scale=25, color="black"):
         draw_list = []
         while len(draw_list) < 4:  # resolves issue, if only one point to draw
             for pos in self.path:
-                if pos[1] % 2 == 0:
-                    draw_list.append(scale * (pos[0] + .5))
-                else:
-                    draw_list.append(scale * pos[0])
-                draw_list.append(scale * pos[1] * self.vertical_stretch)
-        self.id = cv.create_line(*draw_list)
+                coords = self.position_coordinates(pos)
+                draw_list.append(scale * coords[0])
+                draw_list.append(scale * coords[1])
+        self.id = cv.create_line(*draw_list, fill=color)
+
 
     def update_line(self, cv, scale=25):
         draw_list = []
         for pos in self.path:
-            if pos[1] % 2 == 0:
-                draw_list.append(scale * (pos[0] + .5))
-            else:
-                draw_list.append(scale * pos[0])
-            draw_list.append(scale * pos[1] * self.vertical_stretch)
+            coords = self.position_coordinates(pos)
+            draw_list.append(scale * coords[0])
+            draw_list.append(scale * coords[1])
         cv.coords(self.id, *draw_list)
 
 
@@ -109,7 +120,7 @@ class triangular_walker(walker):
     odd_steps = [np.array((1, 0)), np.array((-1, 0)), np.array((0, 1))]
     dx = 3**.5 / 2  # = np.sin(60 * np.pi / 180)
     dy = .5  # = np.cos(60 * np.pi / 180)
-    
+
 
     def walk(self):
         if self.self_avoiding:
@@ -129,6 +140,7 @@ class triangular_walker(walker):
             self.position_dic[tuple(self.pos)] = 1        
         self.steps += 1
 
+
     def position_coordinates(self, position):
         x = position[0] * self.dx
         if position[0] % 2 == 0:
@@ -136,15 +148,18 @@ class triangular_walker(walker):
         else:
             y = -self.dy + ((position[1] + 1) // 2) * (2 * self.dy + 1) + (position[1] // 2)
         return np.array((x, y))
-    
-    def init_line(self, cv, scale=25):
+
+
+    def init_line(self, cv, scale=25, color="black"):
         draw_list = []
-        for pos in self.path:
-            coords = self.position_coordinates(pos)
-            draw_list.append(scale * coords[0])
-            draw_list.append(scale * coords[1])
-        self.id = cv.create_line(*draw_list)
-        
+        while len(draw_list) < 4:
+            for pos in self.path:
+                coords = self.position_coordinates(pos)
+                draw_list.append(scale * coords[0])
+                draw_list.append(scale * coords[1])
+        self.id = cv.create_line(*draw_list, fill=color)
+
+
     def update_line(self, cv, scale=25):
         draw_list = []
         for pos in self.path:
@@ -152,5 +167,3 @@ class triangular_walker(walker):
             draw_list.append(scale * coords[0])
             draw_list.append(scale * coords[1])
         cv.coords(self.id, *draw_list)
-
-

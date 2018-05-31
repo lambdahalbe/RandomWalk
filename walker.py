@@ -67,17 +67,17 @@ class hexagonal_walker(walker):
             if pos[1] % 2 == 0:
                 draw_list.append(scale * (pos[0] + .5))
             else:
-                draw_list.append(25 * pos[0])
-            draw_list.append(25 * pos[1])
+                draw_list.append(scale * pos[0])
+            draw_list.append(scale * np.cos(30*(np.pi/180))* pos[1])
         self.id = cv.create_line(*draw_list)
 
-    def update_line(self, cv):
+    def update_line(self, cv, scale=25):
         #TODO no hard-coded scaling factor!
         draw_list = []
         for pos in self.path:
             if pos[1] % 2 == 0:
-                draw_list.append(25 * (pos[0] + .5))
+                draw_list.append(scale * (pos[0] + .5))
             else:
-                draw_list.append(25 * pos[0])
-            draw_list.append(25 * pos[1])
+                draw_list.append(scale * pos[0])
+            draw_list.append(scale * pos[1] * np.cos(30*(np.pi/180)))
         cv.coords(self.id, *draw_list)

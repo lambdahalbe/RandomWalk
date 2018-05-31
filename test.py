@@ -3,7 +3,7 @@ from display import screen
 import numpy as np
 
 
-new_walker = triangular_walker(np.array([20, 10]))
+new_walker = triangular_walker(np.array([20, 10]),self_avoiding=True)
 for i in range(10):
     new_walker.walk()
 print(new_walker.path)

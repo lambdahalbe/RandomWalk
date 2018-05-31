@@ -48,6 +48,7 @@ class walker:
 class hexagonal_walker(walker):
     even_steps = [np.array((1, 0)), np.array((-1, 0)), np.array((0, 1)), np.array((0, -1)), np.array((1, 1)), np.array((1, -1))]
     odd_steps = [np.array((1, 0)), np.array((-1, 0)), np.array((0, 1)), np.array((0, -1)), np.array((-1, 1)), np.array((-1, -1))]
+    vertical_stretch = np.cos(30*(np.pi/180))
     
     
     def walk(self):
@@ -61,25 +62,24 @@ class hexagonal_walker(walker):
         self.steps += 1
     
     def init_line(self, cv, scale=25):
-        #TODO see update line
         draw_list = []
-        for pos in self.path:
-            if pos[1] % 2 == 0:
-                draw_list.append(scale * (pos[0] + .5))
-            else:
-                draw_list.append(scale * pos[0])
-            draw_list.append(scale * np.cos(30*(np.pi/180))* pos[1])
+        while len(draw_list) < 4:  # resolves issue, if only one point to draw
+            for pos in self.path:
+                if pos[1] % 2 == 0:
+                    draw_list.append(scale * (pos[0] + .5))
+                else:
+                    draw_list.append(scale * pos[0])
+                draw_list.append(scale * pos[1] * self.vertical_stretch)
         self.id = cv.create_line(*draw_list)
 
     def update_line(self, cv, scale=25):
-        #TODO no hard-coded scaling factor!
         draw_list = []
         for pos in self.path:
             if pos[1] % 2 == 0:
                 draw_list.append(scale * (pos[0] + .5))
             else:
                 draw_list.append(scale * pos[0])
-            draw_list.append(scale * pos[1] * np.cos(30*(np.pi/180)))
+            draw_list.append(scale * pos[1] * self.vertical_stretch)
         cv.coords(self.id, *draw_list)
 
 
@@ -142,4 +142,5 @@ class trigonal_walker(walker):
                 draw_list.append(scale * pos[1])
 
         cv.coords(self.id, *draw_list)
+
 

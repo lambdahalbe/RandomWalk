@@ -6,9 +6,11 @@ from time import time, sleep
 class screen:
 
 
-    def __init__(self, width, height, walkers, update_steps=1):
+    def __init__(self, width, height, walkers, scale=25, update_steps=1, sleep_time=0):
         self.walkers = walkers
+        self.scale = scale
         self.update_steps = update_steps
+        self.sleep_time = sleep_time
         self.root = tk.Tk()
         self.cv = tk.Canvas(self.root, width=width, height=height)
         self.cv.create_rectangle(0, 0, width, height, fill="pink")
@@ -20,7 +22,7 @@ class screen:
         self.running = True
 
         for walker in self.walkers:
-            walker.init_line(self.cv)
+            walker.init_line(self.cv, self.scale)
 
         self.root.after(200, self.simulate, self.walkers)
         if "idlelib" not in modules:
@@ -34,9 +36,9 @@ class screen:
 
     def simulate(self, walkers):
         while self.running:
-            #sleep(.3)
+            sleep(self.sleep_time)
             for walker in walkers:
                 for foo in range(self.update_steps):
                     walker.propagate()
-                walker.update_line(self.cv)
+                walker.update_line(self.cv, self.scale)
             self.cv.update()

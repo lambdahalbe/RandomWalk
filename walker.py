@@ -110,15 +110,23 @@ class triangular_walker(walker):
     dx = 3**.5 / 2  # = np.sin(60 * np.pi / 180)
     dy = .5  # = np.cos(60 * np.pi / 180)
     
-    
+
     def walk(self):
-        if sum(self.pos) % 2 == 0:
-            step = random.choice(self.odd_steps)
-        else:
-            step = random.choice(self.even_steps)
+        if self.self_avoiding:
+            if sum(self.pos) % 2 == 0:
+                step = random.choice(self.check_possible(self.odd_steps))
+            else:
+                step = random.choice(self.check_possible(self.even_steps))
+        else:            
+            if sum(self.pos) % 2 == 0:
+                step = random.choice(self.odd_steps)
+            else:
+                step = random.choice(self.even_steps)
 
         self.pos += step
         self.path.append(np.copy(self.pos))
+        if self.self_avoiding:
+            self.position_dic[tuple(self.pos)] = 1        
         self.steps += 1
 
     def position_coordinates(self, position):

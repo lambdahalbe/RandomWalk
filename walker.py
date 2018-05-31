@@ -104,64 +104,45 @@ class hexagonal_walker(walker):
         cv.coords(self.id, *draw_list)
 
 
-class trigonal_walker(walker):
+class triangular_walker(walker):
     even_steps = [np.array((1, 0)), np.array((-1, 0)), np.array((0, -1))]
     odd_steps = [np.array((1, 0)), np.array((-1, 0)), np.array((0, 1))]
+    dx = 3**.5 / 2  # = np.sin(60 * np.pi / 180)
+    dy = .5  # = np.cos(60 * np.pi / 180)
     
     
     def walk(self):
-        if self.pos[0] % 2 == 0:
-            step = random.choice(self.even_steps)
-        else:
+        if sum(self.pos) % 2 == 0:
             step = random.choice(self.odd_steps)
+        else:
+            step = random.choice(self.even_steps)
 
         self.pos += step
         self.path.append(np.copy(self.pos))
         self.steps += 1
 
+    def position_coordinates(self, position):
+        x = position[0] * self.dx
+        if position[0] % 2 == 0:
+            y = (position[1] // 2) * (2 * self.dy + 1) + ((position[1] + 1) // 2) 
+        else:
+            y = -self.dy + ((position[1] + 1) // 2) * (2 * self.dy + 1) + (position[1] // 2)
+        return np.array((x, y))
     
     def init_line(self, cv, scale=25):
-        #TODO see update line
         draw_list = []
         for pos in self.path:
-            if pos[1] % 2 == 0:
-                if pos[0] % 4 == 0 or pos[1] % 4 == 2:
-                   draw_list.append(scale * (pos[0] + 0.5))
-                   
-                else:
-                    draw_list.append(scale * (pos[0] -0.5))
-            else:
-                if pos[0] % 4 == 0 or pos[1] % 4 == 2:
-                   draw_list.append(scale * (pos[0] - 0.5))
-                else:
-                    draw_list.append(scale * (pos[0] + 0.5))
-            if pos[0] % 2 == 0:
-                draw_list.append(scale * pos[1])
-            else:
-                draw_list.append(scale * pos[1])
+            coords = self.position_coordinates(pos)
+            draw_list.append(scale * coords[0])
+            draw_list.append(scale * coords[1])
         self.id = cv.create_line(*draw_list)
         
     def update_line(self, cv, scale=25):
-
-        #TODO see update line
         draw_list = []
         for pos in self.path:
-            if pos[1] % 2 == 0:
-                if pos[0] % 4 == 0 or pos[1] % 4 == 2:
-                   draw_list.append(scale * (pos[0] + 0.5))
-                else:
-                    draw_list.append(scale * (pos[0]-0.5))
-            else:
-                if pos[0] % 4 == 0 or pos[1] % 4 == 2:
-                   draw_list.append(scale * (pos[0]-0.5))
-                else:
-                    draw_list.append(scale * (pos[0] + 0.5))
-
-            if pos[1] % 2 == 0:
-                draw_list.append(scale * pos[1])
-            else:
-                draw_list.append(scale * pos[1])
-
+            coords = self.position_coordinates(pos)
+            draw_list.append(scale * coords[0])
+            draw_list.append(scale * coords[1])
         cv.coords(self.id, *draw_list)
 
 

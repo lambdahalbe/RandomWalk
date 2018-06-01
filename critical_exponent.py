@@ -1,10 +1,14 @@
 from walker import triangular_walker
 import numpy as np
+import sys
+
+if len(sys.argv) < 2:
+    exit()
 
 length = 0
-runs_per_length = 200
+runs_per_length = 1
 
-with open("Data/critical_exponent_data.txt", "w") as file:
+with open(sys.argv[1], "w") as file:
     while length < 500:
         count = 0
         while count < runs_per_length:

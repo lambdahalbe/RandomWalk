@@ -122,17 +122,26 @@ class triangular_walker(walker):
     dy = .5  # = np.cos(60 * np.pi / 180)
 
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.odd = (sum(self.pos) % 2 == 0)  # makes change of step possibilities more efficent
+
+
     def walk(self):
         if self.self_avoiding:
-            if sum(self.pos) % 2 == 0:
+            if self.odd:
                 step = random.choice(self.check_possible(self.odd_steps))
+                self.odd = False
             else:
                 step = random.choice(self.check_possible(self.even_steps))
+                self.odd = True
         else:            
-            if sum(self.pos) % 2 == 0:
+            if self.odd:
                 step = random.choice(self.odd_steps)
+                self.odd = False
             else:
                 step = random.choice(self.even_steps)
+                self.odd = True
 
         self.pos += step
         self.path.append(np.copy(self.pos))

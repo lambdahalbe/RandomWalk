@@ -5,12 +5,13 @@ import sys
 if len(sys.argv) < 2:
     exit()
 
-length = 0
+length = 430
 runs_per_length = 1
 
 with open(sys.argv[1], "w") as file:
     while length < 500:
         count = 0
+        print(length)
         while count < runs_per_length:
             walker = triangular_walker(np.zeros((2)), self_avoiding=True)
             try:

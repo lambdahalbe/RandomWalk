@@ -6,7 +6,7 @@ if len(sys.argv) < 2:
     exit()
 
 length = 430
-runs_per_length = 1
+runs_per_length = 20
 
 with open(sys.argv[1], "w") as file:
     while length < 500:

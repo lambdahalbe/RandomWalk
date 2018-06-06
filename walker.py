@@ -5,7 +5,7 @@ import random
 class walker:
 
 
-    def __init__(self, start_pos, self_avoiding=False):
+    def __init__(self, start_pos, self_avoiding=False, weighted=True):
         self.steps = 0
         self.pos = start_pos
         self.path = [np.copy(start_pos)]
@@ -18,13 +18,22 @@ class walker:
         if self_avoiding:
             self.position_dic = dict()  # values: not visited -> no value, visited -> 1 (to add options later)
             self.position_dic[tuple(start_pos)] = 1
+        self.weighted = weighted
+        if weighted:
+            self.W = 1
+
+
+    def possible_steps(self):
+        return self.step_possibilities
 
 
     def walk(self):
+        steps = self.possible_steps()
         if self.self_avoiding:
-            step = random.choice(self.check_possible(self.step_possibilities))
-        else:
-            step = random.choice(self.step_possibilities)
+            steps = self.check_possible(steps)
+        if self.weighted:
+            self.W *= len(steps)
+        step = random.choice(steps)
         self.pos += step
         self.path.append(np.copy(self.pos))
         self.steps += 1
@@ -66,26 +75,14 @@ class hexagonal_walker(walker):
     even_steps = [np.array((1, 0)), np.array((-1, 0)), np.array((0, 1)), np.array((0, -1)), np.array((1, 1)), np.array((1, -1))]
     odd_steps = [np.array((1, 0)), np.array((-1, 0)), np.array((0, 1)), np.array((0, -1)), np.array((-1, 1)), np.array((-1, -1))]
     vertical_stretch = 3**.5 / 2  # = np.cos(30*(np.pi/180))  # performe calculation only once to increase efficency
-    
-    
-    def walk(self):
-        if self.self_avoiding:
-            if self.pos[1] % 2 == 0:
-                step = random.choice(self.check_possible(self.even_steps))
-            else:
-                step = random.choice(self.check_possible(self.odd_steps))
+
+
+    def possible_steps(self):
+        if self.pos[1] % 2 == 0:
+            return self.even_steps
         else:
-            if self.pos[1] % 2 == 0:
-                step = random.choice(self.even_steps)
-            else:
-                step = random.choice(self.odd_steps)
-
-        self.pos += step
-        self.path.append(np.copy(self.pos))
-        if self.self_avoiding:
-            self.position_dic[tuple(self.pos)] = 1
-        self.steps += 1
-
+            return self.odd_steps
+    
 
     def position_coordinates(self, position):
         if position[1] % 2 == 0:
@@ -127,27 +124,13 @@ class triangular_walker(walker):
         self.odd = (sum(self.pos) % 2 == 0)  # makes change of step possibilities more efficent
 
 
-    def walk(self):
-        if self.self_avoiding:
-            if self.odd:
-                step = random.choice(self.check_possible(self.odd_steps))
-                self.odd = False
-            else:
-                step = random.choice(self.check_possible(self.even_steps))
-                self.odd = True
-        else:            
-            if self.odd:
-                step = random.choice(self.odd_steps)
-                self.odd = False
-            else:
-                step = random.choice(self.even_steps)
-                self.odd = True
-
-        self.pos += step
-        self.path.append(np.copy(self.pos))
-        if self.self_avoiding:
-            self.position_dic[tuple(self.pos)] = 1        
-        self.steps += 1
+    def possible_steps(self):
+        if self.odd:
+            self.odd = False
+            return self.odd_steps
+        else:
+            self.odd = True
+            return self.even_steps
 
 
     def position_coordinates(self, position):

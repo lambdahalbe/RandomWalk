@@ -17,7 +17,7 @@ with open(sys.argv[1], "w") as file:
             try:
                 for foo in range(length):
                     walker.walk()
-            except:
+            except IndexError:
                 continue
             file.write(str(length) + " " + str(np.linalg.norm(walker.position_coordinates(walker.pos))) + "\n")
             count += 1

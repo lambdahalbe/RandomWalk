@@ -1,5 +1,6 @@
 import numpy as np
 import random
+from copy import deepcopy
 
 
 class walker:
@@ -69,6 +70,10 @@ class walker:
             if not self.position_dic.get(tuple(position), False):
                 allowed.append(step)
         return allowed
+
+
+    def copy(self):
+        return deepcopy(self)
 
 
 class hexagonal_walker(walker):

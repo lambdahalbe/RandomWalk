@@ -42,6 +42,7 @@ class perm:
         else:
             W_upper = self.c_upper * self.Z[self.walker.steps] / self.Z[0]
             W_lower = self.c_lower * self.Z[self.walker.steps] / self.Z[0]
+            print(W_lower, self.walker.W, W_upper)
             if self.walker.W > W_upper:
                 print("Enriched")
                 self.Copys[self.walker.steps] += 2
@@ -54,7 +55,10 @@ class perm:
                 if choice([True, False]):
                     print("Pruning accepted")
                     self.Copys[self.walker.steps] = 0
+                else:
+                    self.Copys[self.walker.steps] = 1
             else:
+                print("No Enrichment/Pruning")
                 self.Copys[self.walker.steps] += 1
 
         

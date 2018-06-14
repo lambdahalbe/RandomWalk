@@ -54,10 +54,12 @@ class perm:
                 if choice([True, False]):
                     print("Pruning accepted")
                     self.Copys[self.walker.steps] = 0
+            else:
+                self.Copys[self.walker.steps] += 1
 
         
         if self.Copys[self.walker.steps] == 0:
-            while self.walker.steps > 0  and self.Copys[self.walker.steps] == 0:
+            while self.walker.steps > 1  and self.Copys[self.walker.steps] == 0:
                 print("Shrinking to length " + str(self.walker.steps))
                 self.walker.back_propagate()
                 self.walker.W = self.Weights[self.walker.steps]
@@ -76,4 +78,6 @@ class perm:
 
     def run(self):
         while self.Z[-1] < self.end_weight:
+            print("Z:", self.Z)
+            print("Copys:", self.Copys)
             self.step()

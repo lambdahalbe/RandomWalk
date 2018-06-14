@@ -44,7 +44,7 @@ class walker:
 
     def back_propagate(self):
         self.position_dic[tuple(self.pos)] = 0
-        self.pos = self.path.pop
+        self.pos = self.path.pop()
         self.steps -= 1
 
 
@@ -150,7 +150,7 @@ class triangular_walker(walker):
 
     def back_propagate(self):
         self.odd = not self.odd
-        super().back_propagate(self)
+        super().back_propagate()
 
 
     def position_coordinates(self, position):

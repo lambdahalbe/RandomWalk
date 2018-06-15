@@ -13,12 +13,12 @@ import sys
 #    exit()
 
 length = 0
-runs_per_length = 200
+runs_per_length = 500
 
 
 weights = []
 with open("test.txt", "w") as file:
-    while length < 50:
+    while length < 250:
         count = 0
         while count < runs_per_length:
             walker = triangular_walker(np.zeros((2)), self_avoiding=True)

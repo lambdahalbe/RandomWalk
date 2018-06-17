@@ -36,6 +36,7 @@ class perm:
                 continue
 
     def step(self):
+        print(self.walker.atmosphere())
         if self.walker.steps == self.max_length or self.walker.atmosphere() == 0:
             print("Reached max_length or dead end")
             self.Copys[self.walker.steps] = 0
@@ -63,7 +64,7 @@ class perm:
 
         
         if self.Copys[self.walker.steps] == 0:
-            while self.walker.steps > 1  and self.Copys[self.walker.steps] == 0:
+            while self.walker.steps > 0  and self.Copys[self.walker.steps] == 0:
                 print("Shrinking to length " + str(self.walker.steps))
                 self.walker.back_propagate()
                 self.walker.W = self.Weights[self.walker.steps]
@@ -73,7 +74,8 @@ class perm:
             self.Copys[0] = 1
             self.walker.W = 1
             self.Z[0] += self.walker.W
-        elif self.walker.atmosphere() > 0:
+        
+        if self.walker.atmosphere() > 0:
                 print("Step at length " + str(self.walker.steps))
                 self.Copys[self.walker.steps] -= 1
                 self.walker.walk()

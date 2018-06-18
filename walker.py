@@ -34,6 +34,8 @@ class walker:
             steps = self.check_possible(steps)
         if self.weighted:
             self.W *= len(steps)
+            #print("len(steps):", len(steps))
+            #print("steps:", steps)
         step = random.choice(steps)
         self.pos += step
         self.path.append(np.copy(self.pos))
@@ -129,7 +131,7 @@ class hexagonal_walker(walker):
 
 class triangular_walker(walker):
     even_steps = [np.array((1, 0)), np.array((-1, 0)), np.array((0, -1))]
-    odd_steps = [np.array((1, 0)), np.array((-1, 0)), np.array((0, 1))]
+    odd_steps  = [np.array((1, 0)), np.array((-1, 0)), np.array((0,  1))]
     dx = 3**.5 / 2  # = np.sin(60 * np.pi / 180)
     dy = .5  # = np.cos(60 * np.pi / 180)
 
@@ -146,6 +148,7 @@ class triangular_walker(walker):
         else:
             self.odd = True
             return self.even_steps
+        #TODO:!!!!!!!!!! DO NOT WRITE CHANGE OF ODD IN THIS METHOD!!! PLACE IN WALK!!!!
 
 
     def back_propagate(self):

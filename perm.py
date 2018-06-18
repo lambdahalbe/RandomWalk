@@ -36,14 +36,17 @@ class perm:
                 continue
 
     def step(self):
-        print(self.walker.atmosphere())
+        print("\n------------------------------------------------------------------\n")
+        print("Atmosphere:", self.walker.atmosphere())
+        print("Weight of Walker:", self.walker.W)
+
         if self.walker.steps == self.max_length or self.walker.atmosphere() == 0:
             print("Reached max_length or dead end")
             self.Copys[self.walker.steps] = 0
         else:
             W_upper = self.c_upper * self.Z[self.walker.steps] / self.Z[0]
             W_lower = self.c_lower * self.Z[self.walker.steps] / self.Z[0]
-            print(W_lower, self.walker.W, W_upper)
+            print("W_loser, W, W_upper:", W_lower, self.walker.W, W_upper)
             if self.walker.W > W_upper:
                 print("Enriched")
                 self.Copys[self.walker.steps] += 2
@@ -79,7 +82,9 @@ class perm:
                 print("Step at length " + str(self.walker.steps))
                 self.Copys[self.walker.steps] -= 1
                 self.walker.walk()
+                print("Weight of Walker:", self.walker.W)
                 self.Weights[self.walker.steps] = self.walker.W
+                print("Old Z:", self.Z)
                 self.Z[self.walker.steps] += self.walker.W
 
     def run(self):

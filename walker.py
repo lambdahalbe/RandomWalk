@@ -23,6 +23,14 @@ class walker:
         if weighted:
             self.W = 1
 
+    
+    def end_to_end_distance(self):
+        return np.linalg.norm(self.position_coordinates(self.pos))
+
+
+    def positon_coordinates(self, pos):
+        return self.pos
+
 
     def possible_steps(self):
         return self.step_possibilities
@@ -34,8 +42,6 @@ class walker:
             steps = self.check_possible(steps)
         if self.weighted:
             self.W *= len(steps)
-            #print("len(steps):", len(steps))
-            #print("steps:", steps)
         step = random.choice(steps)
         self.pos += step
         self.path.append(np.copy(self.pos))
@@ -46,7 +52,8 @@ class walker:
 
     def back_propagate(self):
         self.position_dic[tuple(self.pos)] = 0
-        self.pos = self.path.pop()
+        self.path.pop()
+        self.pos = np.copy(self.path[-1])
         self.steps -= 1
 
 
@@ -129,6 +136,7 @@ class hexagonal_walker(walker):
         cv.coords(self.id, *draw_list)
 
 
+        super().walk()
 class triangular_walker(walker):
     even_steps = [np.array((1, 0)), np.array((-1, 0)), np.array((0, -1))]
     odd_steps  = [np.array((1, 0)), np.array((-1, 0)), np.array((0,  1))]
@@ -143,13 +151,14 @@ class triangular_walker(walker):
 
     def possible_steps(self):
         if self.odd:
-            self.odd = False
             return self.odd_steps
         else:
-            self.odd = True
             return self.even_steps
-        #TODO:!!!!!!!!!! DO NOT WRITE CHANGE OF ODD IN THIS METHOD!!! PLACE IN WALK!!!!
 
+    
+    def walk(self):
+        super().walk()
+        self.odd = not self.odd
 
     def back_propagate(self):
         self.odd = not self.odd

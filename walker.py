@@ -6,7 +6,7 @@ from copy import deepcopy
 class walker:
 
 
-    def __init__(self, start_pos, self_avoiding=False, weighted=True):
+    def __init__(self, start_pos, self_avoiding=False, weighted=True, scaling_factor=1):
         self.steps = 0
         self.pos = start_pos
         self.path = [np.copy(start_pos)]
@@ -22,6 +22,7 @@ class walker:
         self.weighted = weighted
         if weighted:
             self.W = 1
+            self.scaling_factor = scaling_factor
 
     
     def end_to_end_distance(self):
@@ -41,7 +42,7 @@ class walker:
         if self.self_avoiding:
             steps = self.check_possible(steps)
         if self.weighted:
-            self.W *= len(steps)
+            self.W *= len(steps) / self.scaling_factor
         step = random.choice(steps)
         self.pos += step
         self.path.append(np.copy(self.pos))

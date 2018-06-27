@@ -21,13 +21,22 @@ s_y = np.array([np.std(data[i], ddof=1) / len(data[i])**.5 for i in x])
 def f(x, a, gamma):
     return a * x**gamma
 
-results = curve_fit(f, x[5:], y[5:], p0=[1, .5], sigma=s_y[5:])
+results = curve_fit(f, x[150:], y[150:], p0=[1, .5], sigma=s_y[150:])
 print(results)
 
-chi2 = (sum((y[5:] - f(x, *results[0])[5:])**2 / s_y[5:]**2) / len(y[5:]))
+chi2 = (sum((y[150:] - f(x, *results[0])[150:])**2 / s_y[150:]**2) / len(y[150:]))
 print(chi2)
 
-#plt.plot(x, y, "xr")
-plt.errorbar(x, y, yerr=s_y, fmt="xr", barsabove=True)
+# Plot hübsch machen
+fig = plt.figure(figsize=(8,5))                                                            
+ax = fig.add_subplot(1,1,1)
+ax.set_yscale('log')
+ax.set_xscale('log')
+
+
+
+
+plt.plot(x, y, "xr")
+plt.errorbar(x, y, yerr=s_y, fmt="o", barsabove=True)
 plt.plot(x, f(x, *results[0]), "--g", lw=2)
 plt.show()

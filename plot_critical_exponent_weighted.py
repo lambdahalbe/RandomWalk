@@ -13,7 +13,7 @@ from scipy.optimize import curve_fit
 dataBySteps = {}
 max_steps = -1
 
-with open("test.txt", "r") as file:
+with open("triangulardat.txt", "r") as file:
     for line in file:
         steps, distance, weights = line.split()
         steps = int(steps)
@@ -51,7 +51,14 @@ def f(x, a, gamma):
     return a * x**gamma
 
 
-results = curve_fit(f, x[5:], sumBySteps[5:], p0=[1, .5], sigma=error_distance[5:])
+# Plot hübsch machen
+fig = plt.figure(figsize=(8,5))                                                            
+ax = fig.add_subplot(1,1,1)
+plt.grid()
+ax.set_yscale('log')
+ax.set_xscale('log')
+
+results = curve_fit(f, x[100:], sumBySteps[100:], p0=[1, .5], sigma=error_distance[100:])
 plt.plot(x, f(x, *results[0]), "--g", lw=2)
 print(results)
 
@@ -62,5 +69,6 @@ print(chi2)
 plt.plot(x, sumBySteps, "xr")
 plt.errorbar(x, sumBySteps, yerr=error_distance, fmt="o", barsabove=True)
 plt.plot(x, f(x, *results[0]), "--g", lw=2)
-#plt.show()
+plt.show()
 #plt.savefig("test.pdf")
+

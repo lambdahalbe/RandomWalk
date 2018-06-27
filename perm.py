@@ -20,6 +20,7 @@ class perm:
         self.c_upper = 2.5
         self.end_weight = end_weight
         self.file = open(filename, "w")
+        self.n = 0
 
 
     def init_partition_sum(self):
@@ -30,6 +31,7 @@ class perm:
                 for i in range(self.max_length):
                     self.Z.append(new_walker.W)
                     new_walker.walk()
+                self.Z.append(new_walker.W)
                 break
             except IndexError:
                 continue
@@ -37,18 +39,21 @@ class perm:
     def step(self):
         if self.walker.steps == self.max_length or self.walker.atmosphere() == 0:
             self.Copys[self.walker.steps] = 0
+            if self.walker.steps == self.max_length:
+                self.n += 1
+                print("MaxLength reached", self.n)
         else:
             W_upper = self.c_upper * self.Z[self.walker.steps] / self.Z[0]
             W_lower = self.c_lower * self.Z[self.walker.steps] / self.Z[0]
             if self.walker.W > W_upper:
-                print("enrichment")
-                self.file.write("enrichment\n")
+                #print("enrichment")
+                #self.file.write("enrichment\n")
                 self.Copys[self.walker.steps] += 2
                 self.walker.W /= 2
                 self.Weights[self.walker.steps] = self.walker.W
             elif self.walker.W < W_lower:
-                print("pruning")
-                self.file.write("pruning\n")
+                #print("pruning")
+                #self.file.write("pruning\n")
                 self.walker.W *= 2
                 self.Weights[self.walker.steps] = self.walker.W
                 if choice([True, False]):
@@ -60,15 +65,15 @@ class perm:
 
         
         if self.Copys[self.walker.steps] == 0:
-            self.file.write("Back Propagate\n")
+            #self.file.write("Back Propagate\n")
             while self.walker.steps > 0  and self.Copys[self.walker.steps] == 0:
-                self.file.write(str(self.walker.pos))
+                #self.file.write(str(self.walker.pos))
                 self.walker.back_propagate()
-                self.file.write("--->" + str(self.walker.pos) + "\n")
+                #self.file.write("--->" + str(self.walker.pos) + "\n")
                 self.walker.W = self.Weights[self.walker.steps]
 
         if self.walker.steps == 0 and self.Copys[self.walker.steps] == 0:
-            self.file.write("new_walk\n")
+            #self.file.write("new_walk\n")
             self.Copys[0] = 1
             self.walker.W = 1
             self.Z[0] += self.walker.W

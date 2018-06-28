@@ -26,20 +26,20 @@ class perm:
             self.metadata_file = open(metadata_filename, "w")
 
 
-    def init_partition_sum(self):
-        while True:
-            try:
-                self.Z = []
-                new_walker = self.walker.copy()
-                for i in range(self.max_length):
-                    self.Z.append(new_walker.W)
-                    new_walker.walk()
-                self.Z.append(new_walker.W)
-                break
-            except IndexError:
-                continue
+    def init_partition_sum(self, aim=self.max_length):
+        while self.successful_runs < aim:
+            self.step(write=False)
+        self.successful_runs = 0
+        self.Copys = [0] * (self.max_length + 1)
+        self.dppl = [0] * (self.max_length + 1)
+        self.Weights = [0] * (self.max_length + 1)
+        while self.walker.steps > 0:
+            self.walker.back_propagate()
+        self.walker.W = 1
 
-    def step(self):
+
+
+    def step(self, write=True):
         if self.walker.steps == self.max_length or self.walker.atmosphere() == 0:
             self.Copys[self.walker.steps] = 0
             if self.walker.steps == self.max_length:
@@ -91,7 +91,8 @@ class perm:
                 self.dppl[self.walker.steps] += 1
                 self.Weights[self.walker.steps] = self.walker.W
                 self.Z[self.walker.steps] += self.walker.W
-                self.writedata()
+                if write:
+                    self.writedata()
 
     def run(self):
         self.running = True
@@ -111,5 +112,6 @@ class perm:
         text = "Output Filename: " + self.filename +\
                 "\nWalker: " + str(self.walker) + "\nScaling Factor: " + str(self.walker.scaling_factor) +\
                 "\nMaxLength: " + str(self.max_length) + "\nRunThreshold: " + str(self.run_threshold) +\
-                "\nDatapoints per Length: " + str(self.dppl)
+                "\nDatapoints per Length: " + str(self.dppl) + "\nGrand Canonical Partition Sum: " +\
+                str(self.Z)
         self.metadata_file.write(text)

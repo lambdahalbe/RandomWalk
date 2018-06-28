@@ -3,7 +3,7 @@ import numpy as np
 from scipy.optimize import curve_fit
 
 filename = "triangular_data.txt"
-maxLength = 800
+maxLength = 1000
 lFB = 200  # lowerFitBoundary
 
 data = []

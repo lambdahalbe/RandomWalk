@@ -26,7 +26,7 @@ class perm:
             self.metadata_file = open(metadata_filename, "w")
 
 
-    def init_partition_sum(self, aim=self.max_length):
+    def init_partition_sum(self, aim):
         while self.successful_runs < aim:
             self.step(write=False)
         self.successful_runs = 0

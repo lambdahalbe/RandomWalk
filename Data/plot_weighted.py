@@ -2,8 +2,8 @@ import matplotlib.pylab as plt
 import numpy as np
 from scipy.optimize import curve_fit
 
-filename = "triangular_data.txt"
-maxLength = 1000
+filename = "triangular_data_old.txt"
+maxLength = 2000
 lFB = 200  # lowerFitBoundary
 
 data = []
@@ -35,7 +35,7 @@ R = np.array([sum(d[0] * d[1]) for d in data])
 sigmas = []
 
 for i in range(maxLength + 1):
-    sigma = (sum((data[i][0] - R[i])**2 * data[i][1]**2) / sum(data[i][1]**2))**.5
+    sigma = (sum((data[i][0] - R[i])**2 * data[i][1]**2))**.5
     sigmas.append(sigma)
 
 sigmas = np.array(sigmas)
@@ -45,4 +45,6 @@ print(results)
 
 plt.plot(x, R)
 plt.errorbar(x, R, sigmas)
+plt.plot(x, f(x, *results[0]), "--")
+
 plt.show()

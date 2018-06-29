@@ -1,25 +1,48 @@
 from random import choice
+import numpy as np
 
 
 
 class perm:
 
 
-    def __init__(self, walker, max_length, run_threshold, filename, metadata_filename=None):
+    def __init__(self, walker, max_length, run_threshold, filename=None, metadata_filename=None, running_parameters=True):
+        
+        # Lists for Perm
+
         self.Weights = [0] * (max_length + 1)  # Weights at Length N
         self.Z = [0] * (max_length + 1)        # Grand Canonical Partion Sum
         self.Copys = [0] * (max_length + 1)    # Number of Copys per Length
         self.dppl = [0] * (max_length + 1)     # DataPoints Per Length
         self.Z[0] = 1                          # Initilize to avoid division by 0
+
+        # Lists for Running Calculation
+        
+        self.running_parameters = running_parameters
+        if running_parameters:
+            self.W = np.zeros((max_length + 1))
+            self.WR = np.zeros((max_length + 1))
+            self.W2R = np.zeros((max_length + 1))
+            self.W2R2 = np.zeros((max_length + 1))
+
+        # Parameters for Perm
+
         self.max_length = max_length
-        self.walker = walker
         self.c_lower = .3  # TODO find better values
         self.c_upper = 3
         self.run_threshold = run_threshold
-        self.filename = filename
-        self.file = open(filename, "w")
         self.successful_runs = 0
+        
+        # Walker
+        
+        self.walker = walker
         self.running = False
+
+        # Data Saving
+
+        self.filename = filename
+        if self.filename:
+            self.file = open(filename, "w")
         self.meta = False
         if metadata_filename:
             self.meta = True
@@ -83,7 +106,8 @@ class perm:
             self.walker.W = 1
             self.Z[0] += self.walker.W
             self.dppl[0] += 1
-            self.writedata()
+            if self.filename:
+                self.writedata()
         
         if self.walker.atmosphere() > 0:
                 self.Copys[self.walker.steps] -= 1
@@ -91,14 +115,25 @@ class perm:
                 self.dppl[self.walker.steps] += 1
                 self.Weights[self.walker.steps] = self.walker.W
                 self.Z[self.walker.steps] += self.walker.W
-                if write:
+                if self.filename:
                     self.writedata()
+
+                # Update Running Values
+                
+                if self.running_parameters:
+                    R = self.walker.end_to_end_distance()
+                    self.W[self.walker.steps] += self.walker.W
+                    self.WR[self.walker.steps] += self.walker.W * R
+                    self.W2R[self.walker.steps] += self.walker.W**2 * R
+                    self.W2R2[self.walker.steps] += self.walker.W**2 * R**2
+
 
     def run(self):
         self.running = True
         while self.running:
             self.step()
-        self.file.close()
+        if self.filename:
+            self.file.close()
         if self.meta:
             self.writemeta()
             self.metadata_file.close()
@@ -109,9 +144,13 @@ class perm:
         self.file.write(line)
 
     def writemeta(self):
-        text = "Output Filename: " + self.filename +\
+        text = "Output Filename: " + str(self.filename) +\
                 "\nWalker: " + str(self.walker) + "\nScaling Factor: " + str(self.walker.scaling_factor) +\
                 "\nMaxLength: " + str(self.max_length) + "\nRunThreshold: " + str(self.run_threshold) +\
                 "\nDatapoints per Length: " + str(self.dppl) + "\nGrand Canonical Partition Sum: " +\
                 str(self.Z)
+        if self.running_parameters:
+            R = self.WR / self.W
+            sR = (R**2 - 2 * R / self.W**2 * self.W2R + self.W2R2 / self.W**2)**.5
+            text += "\nEndToEndDistances: " + str(list(R)) + "\nStd: " + str(list(sR))
         self.metadata_file.write(text)

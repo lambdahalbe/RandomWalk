@@ -2,7 +2,8 @@ import matplotlib.pylab as plt
 import numpy as np
 from scipy.optimize import curve_fit
 
-filename = "triangular_meta.txt"
+#filename = "triangular_meta.txt"
+filename = "hexagonal_meta.txt"
 lfb = 200  # lower fit boundary
 
 line_beginnings = ["Datapoints per Length: ",

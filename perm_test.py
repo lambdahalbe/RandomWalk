@@ -3,6 +3,6 @@ from walker import hexagonal_walker, triangular_walker, walker
 import numpy as np
 
 
-P = perm(triangular_walker(np.zeros((2), dtype=int), self_avoiding = True, scaling_factor = 2), 2000, 50000, metadata_filename="triangular_meta.txt")
+P = perm(hexagonal_walker(np.zeros((2), dtype=int), self_avoiding = True, scaling_factor = 5), 1000, 20000, metadata_filename="hexagonal_meta.txt")
 
 P.run()

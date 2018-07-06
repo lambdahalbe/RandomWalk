@@ -21,6 +21,7 @@ class perm:
         self.running_parameters = running_parameters
         if running_parameters:
             self.W = np.zeros((max_length + 1))
+            self.W2 = np.zeros((max_length + 1))
             self.WR = np.zeros((max_length + 1))
             self.W2R = np.zeros((max_length + 1))
             self.W2R2 = np.zeros((max_length + 1))
@@ -123,6 +124,7 @@ class perm:
                 if self.running_parameters:
                     R = self.walker.end_to_end_distance()
                     self.W[self.walker.steps] += self.walker.W
+                    self.W2[self.walker.steps] += self.walker.W**2
                     self.WR[self.walker.steps] += self.walker.W * R
                     self.W2R[self.walker.steps] += self.walker.W**2 * R
                     self.W2R2[self.walker.steps] += self.walker.W**2 * R**2
@@ -151,6 +153,6 @@ class perm:
                 str(self.Z)
         if self.running_parameters:
             R = self.WR / self.W
-            sR = (R**2 - 2 * R / self.W**2 * self.W2R + self.W2R2 / self.W**2)**.5
+            sR = (R**2 * self.W2 - 2 * R * self.W2R + self.W2R2)**.5 / self.W
             text += "\nEndToEndDistances: " + str(list(R)) + "\nStd: " + str(list(sR))
         self.metadata_file.write(text)

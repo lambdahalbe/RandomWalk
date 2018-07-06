@@ -24,7 +24,7 @@ class screen:
         self.running = True
 
         for walker in self.walkers:
-            walker.init_line(self.cv, self.scale, choice(self.colors))
+            walker.init_line(self.cv, self.scale, "black")
 
         self.root.after(200, self.simulate, self.walkers)
         if "idlelib" not in modules:

@@ -4,7 +4,7 @@ from scipy.optimize import curve_fit
 
 #filename = "triangular_meta.txt"
 filename = "hexagonal_meta.txt"
-lfb = 200  # lower fit boundary
+lfb = 4  # lower fit boundary
 
 line_beginnings = ["Datapoints per Length: ",
                    "Grand Canonical Partition Sum: ",

@@ -6,8 +6,10 @@ from copy import deepcopy
 class walker:
 
 
-    def __init__(self, start_pos, self_avoiding=False, weighted=True, scaling_factor=1):
+    def __init__(self, start_pos=None, self_avoiding=False, weighted=True, scaling_factor=1):
         self.steps = 0
+        if start_pos is None:
+            start_pos = np.zeros((2,))
         self.pos = start_pos
         self.path = [np.copy(start_pos)]
         self.dim = len(start_pos)
@@ -103,14 +105,14 @@ class hexagonal_walker(walker):
 
 
     def possible_steps(self):
-        if self.pos[1] % 2 == 0:
+        if self.pos[1] % 2 != 0:
             return self.even_steps
         else:
             return self.odd_steps
     
 
     def position_coordinates(self, position):
-        if position[1] % 2 == 0:
+        if position[1] % 2 != 0:
             x = position[0] + .5
         else:
             x = position[0]
@@ -137,7 +139,6 @@ class hexagonal_walker(walker):
         cv.coords(self.id, *draw_list)
 
 
-        super().walk()
 class triangular_walker(walker):
     even_steps = [np.array((1, 0)), np.array((-1, 0)), np.array((0, -1))]
     odd_steps  = [np.array((1, 0)), np.array((-1, 0)), np.array((0,  1))]

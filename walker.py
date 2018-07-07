@@ -9,7 +9,7 @@ class walker:
     def __init__(self, start_pos=None, self_avoiding=False, weighted=True, scaling_factor=1):
         self.steps = 0
         if start_pos is None:
-            start_pos = np.zeros((2,))
+            start_pos = np.zeros((2,), dtype=int)
         self.pos = start_pos
         self.path = [np.copy(start_pos)]
         self.dim = len(start_pos)

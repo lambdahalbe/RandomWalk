@@ -152,7 +152,7 @@ class perm:
                 "\nDatapoints per Length: " + str(self.dppl) + "\nGrand Canonical Partition Sum: " +\
                 str(self.Z)
         if self.running_parameters:
-            R = self.WR / self.W
-            sR = (R**2 * self.W2 - 2 * R * self.W2R + self.W2R2)**.5 / self.W
+            R = np.nan_to_num(self.WR / self.W)
+            sR = np.nan_to_num((R**2 * self.W2 - 2 * R * self.W2R + self.W2R2)**.5 / self.W)
             text += "\nEndToEndDistances: " + str(list(R)) + "\nStd: " + str(list(sR))
         self.metadata_file.write(text)

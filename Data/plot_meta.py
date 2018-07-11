@@ -2,8 +2,8 @@ import matplotlib.pylab as plt
 import numpy as np
 from scipy.optimize import curve_fit
 
-filename = "triangular_meta.txt"
-#filename = "hexagonal_meta.txt"
+#filename = "triangular_meta.txt"
+filename = "hexagonal_meta.txt"
 lfb = 4  # lower fit boundary
 
 line_beginnings = ["Datapoints per Length: ",
@@ -32,6 +32,8 @@ results = curve_fit(f, N[lfb:], R[lfb:], p0=(0.75, 0.75), sigma=sR[lfb:])
 print(results)
 chi = chi2(N[lfb:], R[lfb:], sR[lfb:], lambda x: f(x, *results[0]))
 print(chi)
+print(results[0][1], "+-", results[1][1][1]**.5)
+print(abs(results[0][1]-0.75)/results[1][1][1]**.5)
 plt.errorbar(N, R, sR)
 plt.plot(N, f(N, *results[0]), "r--")
 plt.semilogx()

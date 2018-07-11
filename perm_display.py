@@ -2,14 +2,18 @@ import tkinter as tk
 from random import choice
 from sys import modules
 from time import time, sleep
+from PIL import Image
 
 
 class perm_screen:
     colors = ["red", "green", "blue", "cyan", "magenta"]
 
 
-    def __init__(self, width, height, perm, scale=25, update_steps=1, sleep_time=0):
+    def __init__(self, width, height, perm, scale=25, update_steps=1, sleep_time=0, save = False):
         self.perm = perm
+        self.save = save
+        if save:
+            self.counter = 0
         self.scale = scale
         self.update_steps = update_steps
         self.sleep_time = sleep_time
@@ -47,8 +51,15 @@ class perm_screen:
                     s = self.scale
                     r = 2 / 25
                     dots.append(self.cv.create_oval(s * (x-r), s * (y-r), s * (x+r), s * (y+r), fill = "black"))
-            print(dots)
             self.perm.walker.update_line(self.cv, self.scale)
             self.cv.update()
+            if self.save:
+                pic_name = "Animation/Walk" + str(self.counter)
+                self.cv.postscript(file= pic_name + ".eps")
+                img = Image.open(pic_name + ".eps")
+                img.save(pic_name + ".png", "png")
+                self.counter += 1
+
+
             for dot in dots:
                 self.cv.delete(dot)

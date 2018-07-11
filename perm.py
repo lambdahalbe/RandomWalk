@@ -108,7 +108,8 @@ class perm:
             self.Z[0] += self.walker.W
             self.dppl[0] += 1
             if self.filename:
-                self.writedata()
+                if self.walker.steps in [10, 100, 1000]:
+                    self.writedata()
         
         if self.walker.atmosphere() > 0:
                 self.Copys[self.walker.steps] -= 1

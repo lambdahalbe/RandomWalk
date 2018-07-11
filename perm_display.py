@@ -54,7 +54,7 @@ class perm_screen:
             self.perm.walker.update_line(self.cv, self.scale)
             self.cv.update()
             if self.save:
-                pic_name = "Animation/Walk" + str(self.counter)
+                pic_name = "Animation/Walk{:07d}".format(self.counter)
                 self.cv.postscript(file= pic_name + ".eps")
                 img = Image.open(pic_name + ".eps")
                 img.save(pic_name + ".png", "png")

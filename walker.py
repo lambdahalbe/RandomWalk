@@ -31,7 +31,7 @@ class walker:
         return np.linalg.norm(self.position_coordinates(self.pos))
 
 
-    def positon_coordinates(self, pos):
+    def position_coordinates(self, pos):
         return self.pos
 
 

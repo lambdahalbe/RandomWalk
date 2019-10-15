@@ -1,7 +1,12 @@
 # RandomWalk
 
 Test:
-    ./bash --flag
+```
+./bash --flag
+```
 
 Code:
-    #include <boost>
+```c++
+#include <boost>
+```
+Test
